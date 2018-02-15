@@ -1,49 +1,20 @@
-<!--
-MIT License
 
-Copyright (c) 2017 Arshdeep Bahga and Vijay Madisetti
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
--->
 <html>
 <head>
-  <!--title>Charge as You GO</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"-->
+	  <title>Charge as you GO</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
-  <!-- <link rel="stylesheet" href="./bootstrap.min.css"> -->
+
   <link href="./app.css" rel='stylesheet' type='text/css'>
-  <!--  <script src="./app.js"></script>
-  <script src="./jquery.min.js"></script>
-  <script src="./bootstrap.min.js"></script>
-  <script src="./machineMaintainance.js"></script> -->
- <!-- <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script> -->
  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
  <script src="https://cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.js"></script>
  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  <script src="../app.js"></script>
 </head>
 <body>
-    <!-- <center> -->
-       <!-- <h2 style="background-color:#f1f1f1;color:green;">Charge as you GO</h2> -->
-	   
-    <!-- </center> -->
+  
 	
 	<div id="wrapper">
 	  <h1 class="chrome">CHARGE</h1>
@@ -52,8 +23,7 @@ SOFTWARE.
 
   <br/>
   <br/>
-  
-  <div id="status">&nbsp;</div>
+ 
   <div data-role="page">
 		<div style="position: relative;">
     
@@ -67,8 +37,6 @@ SOFTWARE.
          <div class="card-title has-supporting-text"></br>
             <center>
                <h4 style="color:blue;">User Wallet Details</h4>
-               <!--img class="profile-thumbnail" id="profileimg"
-                  src="./img/profile.png" width="20%" /-->
             </center>
 
             <label>Name </label>
@@ -103,9 +71,7 @@ SOFTWARE.
           </center>
           <input type="text" class="form-control"
                   id="minutes" placeholder="Minutes to Charge" /></br>
-          <!--label>Minutes to charge</label>
-          <input type="text" name="minutes" id="minutes" value=""
-              data-clear-btn="true" placeholder=""-->
+        
               <button class="btn btn-primary btn-lg"
                     onclick="btnpay();">Pay</button>
 
@@ -126,9 +92,9 @@ SOFTWARE.
 
 
           <button class="btn btn-primary btn-lg"
-                onclick="btnconfirm();">Confirm Transaction</button>
+                onclick="btnconfirm();">Confirm Transaction</button>  
 
-
+			<div style="color:blue;" id="status">&nbsp;</div> 
         </div>
       </div>
       <div class="row" style="display:none" id ="cnfPage">
@@ -137,21 +103,6 @@ SOFTWARE.
             Transaction Sent</h4>
         </center>
 
-        <!--label>Transaction ID</label>
-        <p id="txdata" style="font-size:9px"></p>
-        <center>
-          <hr width="98%">
-        </center>
-        <label>Minutes to charge</label>
-        <p id="minutes"></p>
-        <center>
-          <hr width="98%">
-        </center>
-        <label>SolarCoins Paid</label>
-        <p id="amount"></p>
-        <center>
-          <hr width="98%">
-        </center-->
 
         <p>Connect your device to the plug on the charging station.
         The charging station will activate in a moment. </p>

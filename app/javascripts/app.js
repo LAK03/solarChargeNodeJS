@@ -16,8 +16,6 @@ import kjua from 'kjua'
 import mnid from 'mnid'
 
 
-
-var postURL = 'http://192.168.0.106:5000';
 // uPort object creation
 // Keys are from the app manager
 const uport = new Connect('Smart Lock', {
@@ -56,7 +54,6 @@ function refreshVars() {
         $("#cf_stations").html(numStations.toNumber());
       });
     });
-    // refreshBalance();
   });
 
 }
@@ -74,8 +71,10 @@ function getStationDetails() {
 }
 
 
+
+
 window.uportbtn = function() {
-  console.log("Inside uport register function");
+  console.log("Uport Register function");
   uport.requestCredentials({
       requested: ['name', 'email', 'phone', 'country'],
       notifcations: true
@@ -111,7 +110,7 @@ window.uportLoginbtn = function() {
   var name;
   var phone;
   var add;
-  console.log("Inside uport Login function");
+  console.log("Uport Login function");
 
   uport.requestCredentials({
       requested: ['name', 'email', 'phone', 'country', 'address'],
@@ -139,8 +138,6 @@ window.uportLoginbtn = function() {
     console.log("Name :" + name);
     console.log("Phone:" + phone);
     console.log("address:" + add);
-
-
     LoginUportUser(name, email, phone, add);
   })
 
@@ -148,23 +145,16 @@ window.uportLoginbtn = function() {
 }
 
 function LoginUportUser(name, email, phone, add) {
-  // var uport_add = mnid.isMNID(add);
-  // console.log("uport address:"+uport_add);
   SolarCharger.deployed().then(function(contractInstance) {
     contractInstance.getUser.call(email).then(
       function(result) {
-
         console.log("name: " + result[0]);
         console.log("phone: " + result[1]);
         console.log("address: " + result[2]);
         console.log("amount: " + result[3]);
         console.log("balance: " + result[4]);
         if (name.toUpperCase() == result[0].toUpperCase() && phone == result[1]) {
-          console.log("Login successfull");
-
-          // $("#cf_address").html(contractInstance.address);
-          // $("#cb_balance").html(web3.fromWei(web3.eth.getBalance(contractInstance.address),
-          // "ether").toFixed(5));
+          console.log("Login successful");
           contractInstance.coinRate.call().then(function(coinRate) {
             console.log("coinRate " + coinRate);
             sessionStorage.setItem('cf_rate', coinRate);
@@ -173,13 +163,9 @@ function LoginUportUser(name, email, phone, add) {
           sessionStorage.setItem('username', result[0]);
           sessionStorage.setItem('useremail', email);
           sessionStorage.setItem('address', result[2]);
-          sessionStorage.setItem('amountpaid', result[3]);
+          sessionStorage.setItem('amountpaid', result[3]/1.0e18);
           sessionStorage.setItem('balance', result[4]);
           sessionStorage.setItem('cb_address', add);
-
-          // sessionStorage.setItem('cb_balance',web3.fromWei(web3.eth.getBalance(web3.eth.coinbase),
-          // "ether").toFixed(5));
-
           window.location.href = 'app/home.html';
         } else {
           console.log("Login failed");
@@ -188,23 +174,17 @@ function LoginUportUser(name, email, phone, add) {
   });
 
 }
-window.registeruser = function(solar) {
-  var name = $("#name").val();
-  var email = $("#email").val();
-  var phone = 9876
-  setStatus("Initiating transaction... (please wait)");
-  registerContract(name, email, phone);
-}
+
 
 function registerContract(email, name, phone) {
-  console.log("inside register contract");
+  console.log("Executing Register contract");
   SolarCharger.deployed().then(function(contractInstance) {
     contractInstance.registerUser(email, name, phone, {
       from: web3.eth.coinbase,
       gas: 2000000
     }).then(
       function(result) {
-        setStatus("Done!");
+        setStatus("Registration Successful!");
         refreshVars();
       });
   });
@@ -216,10 +196,7 @@ window.buyCoins = function(solar) {
   console.log("email:" + email);
   console.log("Initiating transaction... (please wait)");
   var web3_uport = uport.getWeb3();
-  /*
-   * web3_uport.eth.getCoinbase((error, address) => { if (error) { throw error }
-   * var add = address; console.log("uport address:"+add); });
-   */
+
 
   console.log("amount:" + amount);
   const uriHandler = (uri) => {
@@ -231,8 +208,6 @@ window.buyCoins = function(solar) {
         back: 'rgba(255,255,255,1)'
       })
       $('#kqr').html(qr);
-
-
     };
   web3_uport.eth.sendTransaction({
       to: web3.eth.coinbase,
@@ -244,35 +219,33 @@ window.buyCoins = function(solar) {
       }
       var txHashSentEth = txHash
       console.log("txHash : " + txHash);
-
-	 setStatus(" Authentication Success... Initiating transaction... (please wait)");
+	  setStatus(" Authentication Success... Initiating transaction... (please wait)");
       SolarCharger.deployed().then(function(contractInstance) {
         contractInstance.buyCoins(email, amount,{from: web3.eth.coinbase, gas: 2000000
 		}).then(function(result) {
             contractInstance.getUser.call(email).then(
               function(result) {
-                // setStatus("Done!");
-                // refreshVars();
                 console.log("name: " + result[0]);
                 console.log("phone: " + result[1]);
                 console.log("address: " + result[2]);
                 console.log("amount: " + result[3]);
                 console.log("balance: " + result[4]);
-                sessionStorage.setItem('amountpaid', result[3]);
+                sessionStorage.setItem('amountpaid', result[3]/1.0e18);
                 sessionStorage.setItem('balance', result[4]);
-                $('#amountpaid').html(result[3].toNumber());
+				amountInETH =  result[3]/1.0e18;
+                $('#amountpaid').html(amountInETH);
                 $('#balance').html(result[4].toNumber());
 
               });
 			setStatus("Transaction Successful, Check Balance!");
             console.log("Done!");
-            // refreshVars();
           });
       });
+	  
     }
   );
 
-			$("#amount").html('');
+  $("#amount").html('');
 
 }
 
@@ -293,8 +266,8 @@ window.SelectedStation = function() {
 }
 
 window.btnpay = function() {
-  // window.location.href = './transact.html';
-  console.log("inside pay button func");
+ 
+  console.log("Executing Pay function");
   var rate = sessionStorage.getItem('rate');
   var minutes = $("#minutes").val();
   console.log("rate:" + rate);
@@ -303,8 +276,8 @@ window.btnpay = function() {
   console.log("amount:" + amount);
   $('#amount').html(amount);
   $('#cnfminutes').html(minutes);
-  // sessionStorage.setItem('amount', amount);
-  // sessionStorage.setItem('minutes', minutes);
+   sessionStorage.setItem('amount', amount);
+
 
 }
 
@@ -312,97 +285,57 @@ window.logout = function() {
 	sessionStorage.clear();
 	window.location.href='http://35.170.199.205:8080';
 }
-function login() {
-  var name = $("#name").val();
-  var email = $("#email").val();
-  SolarCharger.deployed().then(function(contractInstance) {
-    contractInstance.getUser.call(email).then(
-      function(result) {
 
-        console.log("name: " + result[0]);
-        console.log("phone: " + result[1]);
-        console.log("address: " + result[2]);
-        console.log("amount: " + result[3]);
-        console.log("balance: " + result[4]);
-        if (ignoreCase.equals(name, result[0])) {
-          console.log("Login successfull");
-
-          // $("#cf_address").html(contractInstance.address);
-          // $("#cb_balance").html(web3.fromWei(web3.eth.getBalance(contractInstance.address),
-          // "ether").toFixed(5));
-          contractInstance.coinRate.call().then(function(coinRate) {
-            console.log("coinRate " + coinRate);
-            sessionStorage.setItem('cf_rate', coinRate);
-          });
-          getStationDetails();
-          sessionStorage.setItem('username', result[0]);
-          sessionStorage.setItem('useremail', email);
-          sessionStorage.setItem('address', result[2]);
-          sessionStorage.setItem('amountpaid', result[3]);
-          sessionStorage.setItem('balance', result[4]);
-          sessionStorage.setItem('cb_address', web3.eth.coinbase);
-          // sessionStorage.setItem('cb_balance',web3.fromWei(web3.eth.getBalance(web3.eth.coinbase),
-          // "ether").toFixed(5));
-
-          window.location.href = 'app/home.html';
-        } else {
-          console.log("Login failed");
-        }
-      });
-  });
-  window.location.href = 'app/home.html';
-}
 
 window.btnconfirm = function() {
-  console.log("Inside confirmation page");
+  console.log("Executing confirmation page");
 
-  var login_email = 'emailtoanusha03@gmail.com';
-  var station_ID = $("#stationID").val();
-  var SID = '123';
-  var email = sessionStorage.getItem('useremail');
-  var station_ID = sessionStorage.getItem('stationID');
-
-  var duration = $("#minutes").val();
-  var time = duration * 60;
+   var duration = 0;
+   var amount = 0;
+   var balance = sessionStorage.getItem('balance');
+   var email = sessionStorage.getItem('useremail');
+   var station_ID = sessionStorage.getItem('stationID');
+   
+  amount = $("#amount").val();
+  duration = $("#minutes").val();
+  console.log("minutes:"+duration);
+  var cnf_time = duration * 60;
+  if( duration > 0 && balance > amount) {
+  setStatus("Please wait while charging station is being activated........!!");
   console.log("email:" + email + "station_ID:" + station_ID + "duration:" + duration);
   SolarCharger.deployed().then(function(contractInstance) {
-    contractInstance.activateStation(email, station_ID, time, {
+    contractInstance.activateStation(email, station_ID, cnf_time, {
       from: web3.eth.coinbase,
       gas: 3000000
     }).then(
       function(result) {
         console.log("charging activated ");
-        var rate = sessionStorage.getItem('rate');
-        var time = sessionStorage.getItem('cnfminutes');
+        var amount = sessionStorage.getItem('amount');
         var balance = sessionStorage.getItem('balance');
-        var amount = balance - (rate * time * 60);
-        console.log("balance amount:" + amount);
-        sessionStorage.setItem('balance', amount);
-        $('#balance').html(amount);
+        var remAmount = balance - amount;
+        sessionStorage.setItem('balance', remAmount);
+        $('#balance').html(remAmount);
         $('#cnfPage').show();
+		setStatus("charging station activated successfully");
 
       });
   });
-  // window.location.href = './confirm.html';
+  }
+  else{
+	setStatus("Please enter the minutes to charge and pay the coins before confirming the transaction .........!!");
+  }
 }
 
 $(document).ready(function() {
   if (typeof web3 !== 'undefined') {
     console.warn("Using web3 detected from external source like AWS")
-    // Use Mist/MetaMask's provider
-    // window.web3 = new Web3(web3.currentProvider);
-    // window.web3 = new Web3(new
-    // Web3.providers.HttpProvider("http://"+ip+":8545"));
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://" + ip + ":8545"));
     console.log("Connectiong to ip - if->" + window.web3);
-    // window.web3 = new Web3(new
-    // Web3.providers.HttpProvider("http://ec2-34-210-156-191.us-west-2.compute.amazonaws.com:8000"));
   } else {
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://" + ip + ":8545"));
     console.log("Connected to " + ip + "- else->" + window.web3);
   }
   console.log("HI " + web3.eth.coinbase);
-  // SolarCharger.setProvider(web3.currentProvider);
   SolarCharger.setProvider(window.web3.currentProvider);
 
   web3.eth.getAccounts(function(err, accs) {
@@ -419,12 +352,8 @@ $(document).ready(function() {
     accounts = accs;
     account = accounts[1];
     console.log('No of accounts->' + accounts[0]);
-    // console.log('No of accounts->'+accounts[1]);
-    // initializeContract();
-
     SolarCharger.deployed().then(function(contractInstance) {
       $("#cf_address").html(contractInstance.address);
-      // $("#cb_address").html(account);
       refreshVars();
       contractInstance.addStation('123', '2', 'bay area SFO', {
         from: web3.eth.coinbase,
@@ -434,10 +363,6 @@ $(document).ready(function() {
           console.log("station Registration Done!");
         });
     });
-  });
-  $("#loginwithgoogle").on('click', function(e) {
-    e.preventDefault();
-    login();
   });
 
 });
