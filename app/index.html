@@ -25,7 +25,7 @@ SOFTWARE.
 <html lang="en">
 
 <head>
-  <title>SolarCharger Dapp</title>
+  <title>Charge as You GO </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
@@ -43,12 +43,72 @@ SOFTWARE.
 </head>
 
 <body>
+		<div id="wrapper">
+	  <h1 class="chrome">CHARGE</h1>
+	  <h3 class="chrome2">As You Go</h3>
+  </div>
+  <br/>
+  <br/>
   <div class="container-fluid">
-    <h1>SolarCharger Dapp</h1>
+    
     <h3 style="margin-top: 0px; margin-bottom: 10px;"></h3>
 
     <div id="tabs-1">
+   
+
     <div class="row">
+      <div class="col-md-8">
+        <!-- <center> -->
+        <!-- <h4 style="padding-top:5px;color:blue;">User Registration</h4> -->
+      <!-- </center> -->
+        <!-- <input type="email" class="form-control" -->
+                  <!-- id="email" placeholder="Email" /><br> -->
+
+        <!-- <input type="password" class="form-control" -->
+                <!-- id="name" placeholder="password" /><br> -->
+        <!-- <div class="wrapper"> -->
+        <!-- <button class="btn btn-primary btn-lg" -->
+              <!-- onclick="registerUser();">REGISTER</button> -->
+        <!-- <button class="btn btn-primary btn-lg" -->
+              <!-- id=loginwithgoogle>Login with Google</button> -->
+        <!-- </div> -->
+        <!-- <br><br> -->
+        <!-- <center> -->
+        <!-- <h4 style="padding-top: 20px;color:blue;">User Registration with Uport</h4> -->
+      <!-- </center> -->
+        <button class="btn btn-primary btn-lg"
+        onclick="uportbtn();">Register UPort</button>
+        <button class="btn btn-primary btn-lg"
+        onclick="uportLoginbtn();">Login Uport</button>
+      </div>
+      <div id="kqr"></div>
+
+	  
+      <!--div class="col-md-6">
+        <h2 style="padding-top: 20px;">Buy SolarCoins</h2>
+
+        <span class="black">Coinbase Address:
+        <span id="cb_address" class="c_address"></span></span><br>
+        <span class="black">Coinbase Balance:
+        <span id="cb_balance"></span> ETH</span><br><br>
+
+        <input type="email" class="form-control"
+                id="email1" placeholder="Email" /><br>
+
+        <input type="text" class="form-control"
+                id="amount" placeholder="Amount" /><br>
+        <br><br>
+
+        <button class="btn btn-primary btn-lg"
+              onclick="buyCoins();">BUY COINS</button>
+        <br><br>
+      </div!-->
+      <div id="status">&nbsp;</div>
+    </div>
+	<br/>
+	<br/>
+	<br/>
+	 <div class="row">
       <div class="col-md-3">
 
         <table class="table table-fluid">
@@ -78,54 +138,6 @@ SOFTWARE.
           </tr-->
         </table>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-8">
-        <center>
-        <h4 style="padding-top:5px;color:blue;">User Registration</h4>
-      </center>
-        <input type="email" class="form-control"
-                  id="email" placeholder="Email" /><br>
-
-        <input type="password" class="form-control"
-                id="name" placeholder="password" /><br>
-        <div class="wrapper">
-        <button class="btn btn-primary btn-lg"
-              onclick="registerUser();">REGISTER</button>
-        <button class="btn btn-primary btn-lg"
-              id=loginwithgoogle>Login with Google</button>
-        </div>
-        <br><br>
-        <center>
-        <h4 style="padding-top: 20px;color:blue;">User Registration with Uport</h4>
-      </center>
-        <button class="btn btn-primary btn-lg"
-        onclick="uportbtn();">Register UPort</button>
-        <button class="btn btn-primary btn-lg"
-        onclick="uportLoginbtn();">Login Uport</button>
-      </div>
-      <div id="kqr"></div>
-      <!--div class="col-md-6">
-        <h2 style="padding-top: 20px;">Buy SolarCoins</h2>
-
-        <span class="black">Coinbase Address:
-        <span id="cb_address" class="c_address"></span></span><br>
-        <span class="black">Coinbase Balance:
-        <span id="cb_balance"></span> ETH</span><br><br>
-
-        <input type="email" class="form-control"
-                id="email1" placeholder="Email" /><br>
-
-        <input type="text" class="form-control"
-                id="amount" placeholder="Amount" /><br>
-        <br><br>
-
-        <button class="btn btn-primary btn-lg"
-              onclick="buyCoins();">BUY COINS</button>
-        <br><br>
-      </div!-->
-      <div id="status">&nbsp;</div>
     </div>
   </div>
 

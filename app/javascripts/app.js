@@ -56,7 +56,7 @@ function refreshVars() {
         $("#cf_stations").html(numStations.toNumber());
       });
     });
-    //  refreshBalance();
+    // refreshBalance();
   });
 
 }
@@ -92,8 +92,8 @@ window.uportbtn = function() {
       $('#kqr').html(qr);
 
     }).then((userProfile) => {
-    console.log(userProfile);
     $('#kqr').html('');
+    console.log(userProfile);
     var email = userProfile.email;
     var name = userProfile.name;
     var phone = userProfile.phone;
@@ -148,8 +148,8 @@ window.uportLoginbtn = function() {
 }
 
 function LoginUportUser(name, email, phone, add) {
-  //var uport_add = mnid.isMNID(add);
-  //console.log("uport address:"+uport_add);
+  // var uport_add = mnid.isMNID(add);
+  // console.log("uport address:"+uport_add);
   SolarCharger.deployed().then(function(contractInstance) {
     contractInstance.getUser.call(email).then(
       function(result) {
@@ -162,8 +162,9 @@ function LoginUportUser(name, email, phone, add) {
         if (name.toUpperCase() == result[0].toUpperCase() && phone == result[1]) {
           console.log("Login successfull");
 
-          //  $("#cf_address").html(contractInstance.address);
-          //$("#cb_balance").html(web3.fromWei(web3.eth.getBalance(contractInstance.address), "ether").toFixed(5));
+          // $("#cf_address").html(contractInstance.address);
+          // $("#cb_balance").html(web3.fromWei(web3.eth.getBalance(contractInstance.address),
+          // "ether").toFixed(5));
           contractInstance.coinRate.call().then(function(coinRate) {
             console.log("coinRate " + coinRate);
             sessionStorage.setItem('cf_rate', coinRate);
@@ -176,7 +177,8 @@ function LoginUportUser(name, email, phone, add) {
           sessionStorage.setItem('balance', result[4]);
           sessionStorage.setItem('cb_address', add);
 
-          //  sessionStorage.setItem('cb_balance',web3.fromWei(web3.eth.getBalance(web3.eth.coinbase), "ether").toFixed(5));
+          // sessionStorage.setItem('cb_balance',web3.fromWei(web3.eth.getBalance(web3.eth.coinbase),
+          // "ether").toFixed(5));
 
           window.location.href = 'app/home.html';
         } else {
@@ -214,50 +216,64 @@ window.buyCoins = function(solar) {
   console.log("email:" + email);
   console.log("Initiating transaction... (please wait)");
   var web3_uport = uport.getWeb3();
-  /* web3_uport.eth.getCoinbase((error, address) => {
-    if (error) { throw error }
-    var add = address;
-	console.log("uport address:"+add);
-  });*/
+  /*
+   * web3_uport.eth.getCoinbase((error, address) => { if (error) { throw error }
+   * var add = address; console.log("uport address:"+add); });
+   */
 
   console.log("amount:" + amount);
+  const uriHandler = (uri) => {
+
+      const qr = kjua({
+        text: uri,
+        fill: '#0619ac',
+        size: 300,
+        back: 'rgba(255,255,255,1)'
+      })
+      $('#kqr').html(qr);
+
+
+    };
   web3_uport.eth.sendTransaction({
       to: web3.eth.coinbase,
       value: amount
-    },
+    },  
     (error, txHash) => {
       if (error) {
         throw error
       }
       var txHashSentEth = txHash
+      console.log("txHash : " + txHash);
 
+	 setStatus(" Authentication Success... Initiating transaction... (please wait)");
+      SolarCharger.deployed().then(function(contractInstance) {
+        contractInstance.buyCoins(email, amount,{from: web3.eth.coinbase, gas: 2000000
+		}).then(function(result) {
+            contractInstance.getUser.call(email).then(
+              function(result) {
+                // setStatus("Done!");
+                // refreshVars();
+                console.log("name: " + result[0]);
+                console.log("phone: " + result[1]);
+                console.log("address: " + result[2]);
+                console.log("amount: " + result[3]);
+                console.log("balance: " + result[4]);
+                sessionStorage.setItem('amountpaid', result[3]);
+                sessionStorage.setItem('balance', result[4]);
+                $('#amountpaid').html(result[3].toNumber());
+                $('#balance').html(result[4].toNumber());
+
+              });
+			setStatus("Transaction Successful, Check Balance!");
+            console.log("Done!");
+            // refreshVars();
+          });
+      });
     }
   );
 
-  // SolarCharger.deployed().then(function(contractInstance) {
-  //   contractInstance.buyCoins(email, amount).then(
-  //     function(result) {
-  //       contractInstance.getUser.call(email).then(
-  //         function(result) {
-  //           //setStatus("Done!");
-  //           //refreshVars();
-  //           console.log("name: " + result[0]);
-  //           console.log("phone: " + result[1]);
-  //           console.log("address: " + result[2]);
-  //           console.log("amount: " + result[3]);
-  //           console.log("balance: " + result[4]);
-  //           sessionStorage.setItem('amountpaid', result[3]);
-  //           sessionStorage.setItem('balance', result[4]);
-  //           $('#amountpaid').html(result[3].toNumber());
-  //           $('#balance').html(result[4].toNumber());
-  //
-  //
-  //         });
-  //       console.log("Done!");
-  //
-  //       //  refreshVars();
-  //     });
-  // });
+			$("#amount").html('');
+
 }
 
 window.SelectedStation = function() {
@@ -277,7 +293,7 @@ window.SelectedStation = function() {
 }
 
 window.btnpay = function() {
-  //  window.location.href = './transact.html';
+  // window.location.href = './transact.html';
   console.log("inside pay button func");
   var rate = sessionStorage.getItem('rate');
   var minutes = $("#minutes").val();
@@ -287,11 +303,15 @@ window.btnpay = function() {
   console.log("amount:" + amount);
   $('#amount').html(amount);
   $('#cnfminutes').html(minutes);
-  //sessionStorage.setItem('amount', amount);
-  //sessionStorage.setItem('minutes', minutes);
+  // sessionStorage.setItem('amount', amount);
+  // sessionStorage.setItem('minutes', minutes);
 
 }
 
+window.logout = function() {
+	sessionStorage.clear();
+	window.location.href='http://35.170.199.205:8080';
+}
 function login() {
   var name = $("#name").val();
   var email = $("#email").val();
@@ -307,8 +327,9 @@ function login() {
         if (ignoreCase.equals(name, result[0])) {
           console.log("Login successfull");
 
-          //  $("#cf_address").html(contractInstance.address);
-          //$("#cb_balance").html(web3.fromWei(web3.eth.getBalance(contractInstance.address), "ether").toFixed(5));
+          // $("#cf_address").html(contractInstance.address);
+          // $("#cb_balance").html(web3.fromWei(web3.eth.getBalance(contractInstance.address),
+          // "ether").toFixed(5));
           contractInstance.coinRate.call().then(function(coinRate) {
             console.log("coinRate " + coinRate);
             sessionStorage.setItem('cf_rate', coinRate);
@@ -320,7 +341,8 @@ function login() {
           sessionStorage.setItem('amountpaid', result[3]);
           sessionStorage.setItem('balance', result[4]);
           sessionStorage.setItem('cb_address', web3.eth.coinbase);
-          // sessionStorage.setItem('cb_balance',web3.fromWei(web3.eth.getBalance(web3.eth.coinbase), "ether").toFixed(5));
+          // sessionStorage.setItem('cb_balance',web3.fromWei(web3.eth.getBalance(web3.eth.coinbase),
+          // "ether").toFixed(5));
 
           window.location.href = 'app/home.html';
         } else {
@@ -361,7 +383,7 @@ window.btnconfirm = function() {
 
       });
   });
-  //window.location.href = './confirm.html';
+  // window.location.href = './confirm.html';
 }
 
 $(document).ready(function() {
@@ -369,16 +391,18 @@ $(document).ready(function() {
     console.warn("Using web3 detected from external source like AWS")
     // Use Mist/MetaMask's provider
     // window.web3 = new Web3(web3.currentProvider);
-    //  window.web3 = new Web3(new Web3.providers.HttpProvider("http://"+ip+":8545"));
+    // window.web3 = new Web3(new
+    // Web3.providers.HttpProvider("http://"+ip+":8545"));
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://" + ip + ":8545"));
     console.log("Connectiong to ip - if->" + window.web3);
-    //window.web3 = new Web3(new Web3.providers.HttpProvider("http://ec2-34-210-156-191.us-west-2.compute.amazonaws.com:8000"));
+    // window.web3 = new Web3(new
+    // Web3.providers.HttpProvider("http://ec2-34-210-156-191.us-west-2.compute.amazonaws.com:8000"));
   } else {
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://" + ip + ":8545"));
     console.log("Connected to " + ip + "- else->" + window.web3);
   }
   console.log("HI " + web3.eth.coinbase);
-  //SolarCharger.setProvider(web3.currentProvider);
+  // SolarCharger.setProvider(web3.currentProvider);
   SolarCharger.setProvider(window.web3.currentProvider);
 
   web3.eth.getAccounts(function(err, accs) {
@@ -395,12 +419,12 @@ $(document).ready(function() {
     accounts = accs;
     account = accounts[1];
     console.log('No of accounts->' + accounts[0]);
-    //console.log('No of accounts->'+accounts[1]);
-    //initializeContract();
+    // console.log('No of accounts->'+accounts[1]);
+    // initializeContract();
 
     SolarCharger.deployed().then(function(contractInstance) {
       $("#cf_address").html(contractInstance.address);
-      //  $("#cb_address").html(account);
+      // $("#cb_address").html(account);
       refreshVars();
       contractInstance.addStation('123', '2', 'bay area SFO', {
         from: web3.eth.coinbase,
@@ -417,3 +441,10 @@ $(document).ready(function() {
   });
 
 });
+
+if ( navigator.platform.indexOf('Win') != -1 ) {
+  window.document.getElementById("wrapper").setAttribute("class", "windows");
+} else if ( navigator.platform.indexOf('Mac') != -1 ) {
+  window.document.getElementById("wrapper").setAttribute("class", "mac");
+}
+

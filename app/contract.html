@@ -23,8 +23,8 @@ SOFTWARE.
 -->
 <html>
 <head>
-  <title>SolarCharge</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--title>Charge as You GO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"-->
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
   <!-- <link rel="stylesheet" href="./bootstrap.min.css"> -->
@@ -39,17 +39,32 @@ SOFTWARE.
  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
  <script src="../app.js"></script>
 </head>
-
 <body>
+    <!-- <center> -->
+       <!-- <h2 style="background-color:#f1f1f1;color:green;">Charge as you GO</h2> -->
+	   
+    <!-- </center> -->
+	
+	<div id="wrapper">
+	  <h1 class="chrome">CHARGE</h1>
+	  <h3 class="chrome2">As You Go</h3>
+  </div>
+
+  <br/>
+  <br/>
+  
+  <div id="status">&nbsp;</div>
   <div data-role="page">
-    <center>
-       <h2>SolarCharge</h2>
-    </center>
+		<div style="position: relative;">
+    
+    <div style="position: absolute; top: 0; right: 0;"><button class="btn btn-primary btn-lg"
+                 onclick="logout();"> LogOut </button></div>
+</div>
     </div>
 
     <div role="main" class="ui-content" data-inset="false">
       <div class="row">
-         <div class="card-title has-supporting-text">
+         <div class="card-title has-supporting-text"></br>
             <center>
                <h4 style="color:blue;">User Wallet Details</h4>
                <!--img class="profile-thumbnail" id="profileimg"
@@ -118,7 +133,7 @@ SOFTWARE.
       </div>
       <div class="row" style="display:none" id ="cnfPage">
         <center>
-          <h4 class="card-primary-title clr-black">
+          <h4 style="color:blue;">
             Transaction Sent</h4>
         </center>
 

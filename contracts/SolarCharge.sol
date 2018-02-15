@@ -75,7 +75,7 @@ contract SolarCharge {
 		numUsers += 1;
 	}
 
-	function buyCoins(string _email, unit _amount)  public {
+	function buyCoins(string _email, uint _amount) payable public {
 		bytes32 email = stringToBytes(_email);
 
 		/*if(users[email].userAccount!=msg.sender){
