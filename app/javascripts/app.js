@@ -169,6 +169,7 @@ function LoginUportUser(name, email, phone, add) {
           window.location.href = 'app/home.html';
         } else {
           console.log("Login failed");
+		  setStatus("Login Failed.....Please register by clicking Register Uport!");
         }
       });
   });
@@ -232,7 +233,7 @@ window.buyCoins = function(solar) {
                 console.log("balance: " + result[4]);
                 sessionStorage.setItem('amountpaid', result[3]/1.0e18);
                 sessionStorage.setItem('balance', result[4]);
-				amountInETH =  result[3]/1.0e18;
+				var amountInETH =  result[3]/1.0e18;
                 $('#amountpaid').html(amountInETH);
                 $('#balance').html(result[4].toNumber());
 
